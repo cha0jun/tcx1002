@@ -18,15 +18,24 @@ def get_avg(feedbacks:list):
             res.update({x[0]:(val+x[1])/2})
     return res
 
-def build_path(mod:str,requirements:dict):
+def build_path(mod:str,requirements:dict,avg:dict):
     res = []
+    score = 0
     isBuilt = False
     currMod = mod
     while isBuilt == False:
         res.append(currMod)
-        ls = requirements[currMod]
+        ls = (requirements[currMod])
+        if len(ls)>0:
+            currMod = ls[0]
+        else:
+            isBuilt = True
 
-    return res
+    for x in res:
+        if x in avg.keys():
+            score = score + avg[x]
+    
+    return res[::-1], score
             
 
 
@@ -35,9 +44,14 @@ def path_to_graduate(feedbacks:list, requirements:dict):
     avg_scores = get_avg(feedbacks)
     
     to_grad = requirements['G']
+    currScore = 99999 ## init with high value to compare
+    currPath = []
+    for x in to_grad:
+        path, score = build_path(x,requirements,avg_scores)
+        if score < currScore:
+            currScore = score
+            currPath = path
+    return currPath
+        
     
-    print(to_grad)
-    
-##path_to_graduate(feedbacks,requirements)
-
-print(build_path('TCX1003',requirements))
+print(path_to_graduate(feedbacks,requirements))
