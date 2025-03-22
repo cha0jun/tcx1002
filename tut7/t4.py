@@ -22,11 +22,23 @@ class Book:
     
     @status.setter
     def status(self,new_status:str):
-        status_ls = ['available', 'on loan']
-        if not new_status:
-            raise Exception('Status is empty')
-        elif new_status not in status_ls:
-            raise Exception('Invalid status')
+        status_ls = ['available', 'on loan', 'on maintenance']
+        try:
+            if not new_status:
+                raise Exception('Status is empty')
+            elif new_status not in status_ls:
+                raise Exception('Invalid status')
+            elif self.status == 'available':
+                if new_status == 'available':
+                    raise Exception()
+            elif self.status == 'on loan':
+                if new_status == 'on maintenance':
+                    raise Exception()
+            else: ## on maintenance
+                if new_status == 'on loan':
+                    raise Exception()
+        except:
+            raise Exception('Invalid status change')
         self._status = new_status
               
     
@@ -49,34 +61,26 @@ class Borrow:
 
 # Do NOT change the following testcases
 book1 = Book('Intro to Python', 'Alice')
+borrow1 = Borrow('Charlie', book1)
 test1 = str(book1)
 print("1", test1)
 
-book2 = Book('Intro to Database', 'Bob')
-test2 = str(book2)
-print("2", test2)
+try:
+  book1.status = 'on maintenance'
+except Exception as e:
+  test2 = str(e)
+  print("2", test2)
 
-
-borrow1 = Borrow('Charlie', book1)
-test3 = str(borrow1)
+borrow1.return_book()
+test3 = str(book1)
 print("3", test3)
+
+book1.status = 'on maintenance'
 test4 = str(book1)
 print("4", test4)
 
 try:
   borrow2 = Borrow('Denny', book1)
 except Exception as e:
-  test9 = str(e)
-  print("9", test9)
-
-borrow1.return_book()
-test5 = str(borrow1)
-print("5", test5)
-test6 = str(book1)
-print("6", test6)
-
-borrow2 = Borrow('Denny', book1)
-test7 = str(borrow2)
-print("7", test7)
-test8 = str(book1)
-print("8", test8)
+  test5 = str(e)
+  print("5", test5)
